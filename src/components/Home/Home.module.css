@@ -1,0 +1,13 @@
+.home{
+    box-sizing: border-box;
+	margin: 5em auto 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 60vw;
+	max-width: 500px;
+	min-width: 320px;
+	padding: 1em 2em;
+	border-radius: 8px;
+	background-color: #fff;
+}
