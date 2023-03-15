@@ -1,0 +1,23 @@
+.button {
+	padding: 0.5em 2em;
+	color: white;
+	background-color: rgb(65, 105, 225);
+	border: none;
+	border-radius: 6px;
+	transition: background-color 0.3s;
+	cursor: pointer;
+}
+
+.button:hover {
+	background-color: rgb(49, 79, 169);
+}
+
+button:disabled,
+button:focus:disabled,
+button:hover:disabled,
+button:active:disabled {
+  background: #ccc;
+  border-color: #ccc;
+  color: #666666;
+  cursor: not-allowed;
+}
