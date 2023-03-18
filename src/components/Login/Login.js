@@ -1,56 +1,81 @@
-import { useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useReducer, useContext } from 'react'
+import AuthContext from '../store/auth-context'
 import Button from '../UI/Button'
+import Input from '../UI/Input'
 import classes from './Login.module.css'
 
-const Login = () => {
-	const [enteredEmail, setEnteredEmail] = useState('')
-	const [enteredPassword, setEnteredPassword] = useState('')
-	const [emailIsValid, setEmailIsValid] = useState(false)
-	const [passwordIsValid, setPasswordIsValid] = useState(false)
+const Login = props => {
+	const ctx = useContext(AuthContext)
 	const [formIsValid, setFormIsValid] = useState(false)
+	const passwordInputRef = useRef()
+	const emailInputRef = useRef()
+
+	const [emailState, dispatchEmail] = useReducer(
+		(state, action) => {
+			if (action.type === 'USER_INPUT') {
+				return { value: action.value, isValid: action.value.includes('@') }
+			}
+			return { value: '', isValid: undefined }
+		},
+		{ value: '', isValid: undefined }
+	)
+
+	const [passwordState, dispatchPassword] = useReducer(
+		(state, action) => {
+			if (action.type === 'USER_INPUT') {
+				return { value: action.value, isValid: action.value.trim().length > 5 }
+			}
+			return { value: '', isValid: undefined }
+		},
+		{ value: '', isValid: undefined }
+	)
 
 	useEffect(() => {
-		if (emailIsValid && passwordIsValid) {
+		if (emailState.isValid && passwordState.isValid) {
 			setFormIsValid(true)
 		} else {
 			setFormIsValid(false)
 		}
-	}, [emailIsValid, passwordIsValid])
+	}, [emailState.isValid, passwordState.isValid])
 
 	const onEmailHandler = e => {
-		setEnteredEmail(e.target.value)
-
-		if (e.target.value.includes('@')) {
-			setEmailIsValid(true)
-		} else {
-			setEmailIsValid(false)
-		}
+		dispatchEmail({ type: 'USER_INPUT', value: e.target.value })
 	}
 
 	const onPasswordHandler = e => {
-		setEnteredPassword(e.target.value)
-		if (e.target.value.trim().length > 5) {
-			setPasswordIsValid(true)
+		dispatchPassword({ type: 'USER_INPUT', value: e.target.value })
+	}
+
+	const submitHandler = e => {
+		e.preventDefault()
+		if (formIsValid) {
+			ctx.onLogin()
+		} else if (!emailState.isValid) {
+			emailInputRef.current.activate()
 		} else {
-			setPasswordIsValid(false)
+			passwordInputRef.current.activate()
 		}
 	}
 
 	return (
-		<form className={classes.form}>
-			<div className={classes.form__box}>
-				<label className={classes.form__label} htmlFor='e-mail'>
-					E-Mail
-				</label>
-				<input className={classes.form__input} id='e-mail' type='email' onChange={onEmailHandler}></input>
-			</div>
-			<div className={classes.form__box}>
-				<label className={classes.form__label} htmlFor='password'>
-					Password
-				</label>
-				<input className={classes.form__input} id='password' type='password' onChange={onPasswordHandler}></input>
-			</div>
-			<Button disabled={!formIsValid}>Login</Button>
+		<form className={classes.form} onSubmit={submitHandler}>
+			<Input
+				ref={emailInputRef}
+				id={'email'}
+				label={'E-mail'}
+				type={'email'}
+				isValid={emailState.isValid}
+				onChange={onEmailHandler}></Input>
+
+			<Input
+				ref={passwordInputRef}
+				id={'password'}
+				label={'Password'}
+				type={'password'}
+				isValid={passwordState.isValid}
+				onChange={onPasswordHandler}></Input>
+
+			<Button type={'submit'}>Login</Button>
 		</form>
 	)
 }
