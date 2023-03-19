@@ -48,12 +48,17 @@ const Login = props => {
 
 	const submitHandler = e => {
 		e.preventDefault()
+
 		if (formIsValid) {
 			ctx.onLogin()
 		} else if (!emailState.isValid) {
 			emailInputRef.current.activate()
 		} else {
 			passwordInputRef.current.activate()
+		}
+
+		if (!formIsValid) {
+			e.target.className = `${classes.form} ${classes.valid}`
 		}
 	}
 
@@ -81,3 +86,4 @@ const Login = props => {
 }
 
 export default Login
+// disabled={!formIsValid}

@@ -1,5 +1,5 @@
 .form {
-    box-sizing: border-box;
+	box-sizing: border-box;
 	margin: 5em auto 0;
 	display: flex;
 	flex-direction: column;
@@ -13,19 +13,7 @@
 	background-color: #fff;
 }
 
-.form__box {
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-}
-.form__label {
-	flex: 1;
-    color: #464646;
-}
-
-.form__input {
-	flex: 3;
-	padding: 0.35rem 0.35rem;
-	border-radius: 6px;
-	border: 1px solid #ccc;
+.form.valid input {
+	border: 1px solid rgb(219, 44, 44);
+	background-color: rgba(255, 0, 0, 0.18);
 }
